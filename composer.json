@@ -1,0 +1,23 @@
+{
+    "name": "hao/libphp",
+    "autoload": {
+        "files": [
+            "init.php"
+        ]
+    },
+    "config": {
+        "process-timeout":0
+    },
+    "repositories": [
+        {"type": "vcs", "url": "https://github.com/quachvanhao2020/__init__PHP.git"}
+    ],
+    "authors": [
+        {
+            "name": "Hao Quach",
+            "email": "quachvanhao2020@gmail.com"
+        }
+    ],
+    "require": {
+        "administrator/init_php":"dev-main"
+    }
+}
