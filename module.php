@@ -1,5 +1,6 @@
 <?php
-define("ACCEPT_LANG",getenv('ACCEPT_LANG', true) ? getenv('ACCEPT_LANG') : "vi,en");
+!defined("TYPE_LANG") && define("TYPE_LANG","json");
+!defined("DEFAULT_LANG") && define("ACCEPT_LANG","vi,en");
 !defined("DEFAULT_LANG") && define("DEFAULT_LANG","en");
 !defined("DETECT_LANG") && define("DETECT_LANG",false);
 global $_LANGUAGE;
@@ -27,7 +28,15 @@ function load_module(string $path,callable $callable = null){
     }
     $hl = $_HL;
     $i18n = $load['i18n'];
-    $lang = require $i18n."/{$hl}.php";
+    $lang = [];
+    switch (TYPE_LANG) {
+        case 'json':
+        $lang = json_decode(file_get_contents($i18n."/{$hl}.json"),true);
+            break;
+        default:
+        $lang = require $i18n."/{$hl}.php";
+            break;
+    }
     $_LANGUAGE = array_merge($_LANGUAGE,$lang);
     return;
 }
