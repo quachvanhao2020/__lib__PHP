@@ -133,6 +133,19 @@ class EntityHttpControl extends BaseEntityControler{
                     if(isset($_GET['size'])){
                         $this->pagination->size = $_GET['size'];
                     }
+                    if(isset($_GET['key'])){
+                        $this->filter->data = [
+                            "key" => $_GET['key'],
+                            "value" => $_GET['value'],
+                        ];
+                    }
+                    if(isset($_GET['sort'])){
+                        $sort = explode("_",$_GET['sort']);
+                        if(count($sort) == 2){
+                            $this->sorter->name = $sort[0];
+                            $this->sorter->mode = $sort[1];
+                        }
+                    }
                     $data = parent::list($this->pagination);
                     $this->data = $data;
                     $this->method = "list";
@@ -291,7 +304,7 @@ class Filter{
         }
         if(!isset($key)) return;
         foreach ($data as $k => $v) {
-            if(!is_array($v)) continue;
+            if(!is_arrays($v)) continue;
             if(!isset($v[$key])){
                 unset($data[$k]);
                 continue;
@@ -323,6 +336,7 @@ class Filter{
                         break;
                     case 'lowercase':
                         $d2 = strtolower($d2);
+                        $d1 = strtolower($d1);
                         break;
                     default:
                         break;
@@ -340,13 +354,13 @@ class Sorter{
     {
         $this->name = $name;
         $this->type = $type;
-        $this->mode = $mode;
+        $this->mode = intval($mode);
     }
     public function result(&$data){
         $arr = (array)$data;
         usort($arr,function($a,$b) {
-            if(!is_array($a)) return 0;
-            if(!is_array($b)) return 0;
+            if(!is_arrays($a)) return 0;
+            if(!is_arrays($b)) return 0;
             $ad = @$a[$this->name];
             $bd = @$b[$this->name];
             if ($ad == $bd) {
