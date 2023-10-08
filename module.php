@@ -1,6 +1,6 @@
 <?php
 !defined("TYPE_LANG") && define("TYPE_LANG","json");
-!defined("DEFAULT_LANG") && define("ACCEPT_LANG","vi,en");
+!defined("ACCEPT_LANG") && define("ACCEPT_LANG","vi,en");
 !defined("DEFAULT_LANG") && define("DEFAULT_LANG","en");
 !defined("DETECT_LANG") && define("DETECT_LANG",false);
 global $_LANGUAGE;
@@ -31,21 +31,22 @@ function load_module(string $path,callable $callable = null){
     $lang = [];
     switch (TYPE_LANG) {
         case 'json':
-        $lang = json_decode(file_get_contents($i18n."/{$hl}.json"),true);
+        $lang = json_decode(@file_get_contents($i18n."/{$hl}.json"),true);
             break;
         default:
         $lang = require $i18n."/{$hl}.php";
             break;
     }
-    $_LANGUAGE = array_merge($_LANGUAGE,$lang);
-    return;
+    if(@empty($lang)){
+        $_LANGUAGE = array_merge($_LANGUAGE,$lang);
+    }
 }
 function __($key){
     global $_LANGUAGE;
     return isset($_LANGUAGE[$key]) ? $_LANGUAGE[$key] : $key;
 }
 function detect_language(){
-    $lang = isset($_GET['hl']) ? $_GET['hl'] : (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : "en");
+    $lang = isset($_GET['hl']) ? $_GET['hl'] : (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'],0,2) : "en");
     $acceptLang = explode(",",ACCEPT_LANG);
     $lang = in_array($lang, $acceptLang) ? $lang : 'en';
     return $lang;

@@ -2,7 +2,8 @@
     "name": "hao/libphp",
     "autoload": {
         "files": [
-            "init.php"
+            "init.php",
+            "function.php"
         ]
     },
     "config": {
