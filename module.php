@@ -37,7 +37,7 @@ function load_module(string $path,callable $callable = null){
         $lang = require $i18n."/{$hl}.php";
             break;
     }
-    if(@empty($lang)){
+    if(!empty($lang)){
         $_LANGUAGE = array_merge($_LANGUAGE,$lang);
     }
 }
